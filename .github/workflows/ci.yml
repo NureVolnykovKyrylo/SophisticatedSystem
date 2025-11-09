@@ -1,0 +1,25 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Configure CMake
+        run: cmake -S . -B cmake/build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build project
+        run: cmake --build cmake/build --parallel
+
+      - name: Run tests
+        run: ctest --test-dir cmake/build -C Debug --output-on-failure
